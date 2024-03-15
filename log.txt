@@ -1,2 +1,6 @@
 [2024-03-15T12:50:37.318Z] GET /
 [2024-03-15T12:50:37.376Z] GET /favicon.ico
+[2024-03-15T12:53:52.555Z] GET /documentation
+[2024-03-15T12:53:52.608Z] GET /favicon.ico
+[2024-03-15T12:57:53.060Z] GET /documentation
+[2024-03-15T12:57:53.092Z] GET /favicon.ico
