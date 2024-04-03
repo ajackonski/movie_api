@@ -11,7 +11,7 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {f
 
 // setup the logger
 app.use(morgan('combined', {stream: accessLogStream}));
-
+app.use(express.static('public'));
 let topMovies = [
     {
       title: 'The Thing',
@@ -31,9 +31,8 @@ let topMovies = [
     res.send('Welcome to my movie list!');
   });
   
-  app.use(morgan('combined', {stream: accessLogStream}));
-  app.use(express.static('public'));
   app.use('/documentation', express.static('public'));
+
   
   app.get('/movies', (req, res) => {
     res.json(topMovies);
