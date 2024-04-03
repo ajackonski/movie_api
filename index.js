@@ -5,13 +5,6 @@ const express = require('express'),
   bodyParser = require('body-parser')
 const app = express()
 
-// create a write stream (in append mode)
-// a ‘log.txt’ file is created in root directory
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
-
-// setup the logger
-app.use(morgan('combined', {stream: accessLogStream}));
-app.use(express.static('public'));
 let topMovies = [
     {
       title: 'The Thing',
@@ -27,25 +20,34 @@ let topMovies = [
     }
   ];
 
-  app.get('/', (req, res) => {
+  // create a write stream (in append mode)
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
+
+// setup the logger
+app.use(morgan('combined', {stream: accessLogStream}));
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
     res.send('Welcome to my movie list!');
   });
   
-  app.use('/documentation', express.static('public'));
+app.get('/documentation', (req, res) => {
+  res.sendFile('/public/documentation');
+  });
 
   
-  app.get('/movies', (req, res) => {
+app.get('/movies', (req, res) => {
     res.json(topMovies);
   });
 
-  app.get('/', (req, res) => {
-    res.send('Welcome to my app!');
-  });
+app.get('/', (req, res) => {
+  res.send('Welcome to my app!');
+});
   
-   // listen for requests
-  app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.');
-  });
+  // listen for requests
+app.listen(8080, () => {
+  console.log('Your app is listening on port 8080.');
+});
 
 app.use(bodyParser.urlencoded({
   extended: true
