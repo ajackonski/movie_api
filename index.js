@@ -31,6 +31,8 @@ let topMovies = [
     res.send('Welcome to my movie list!');
   });
   
+  app.use(morgan('combined', {stream: accessLogStream}));
+  app.use(express.static('public'));
   app.use('/documentation', express.static('public'));
   
   app.get('/movies', (req, res) => {
