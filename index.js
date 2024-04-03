@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
   });
   
 app.get('/documentation', (req, res) => {
-  res.sendFile('/public/documentation');
+  res.sendFile('/public/documentation.html');
   });
 
   
