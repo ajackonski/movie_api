@@ -38,6 +38,7 @@ let users = [
  {
   id: 1,
   name: "alex",
+  email: "alex@email.com",
   favoriteMovies: ["The Thing"]
  }
   
@@ -86,7 +87,7 @@ app.get('/movies/genre/:genreName', (req, res) => {
     return res.status(400).send("no such genre!")
   }
 });
-
+//get data on a director
 app.get('/movies/director/:directorName', (req, res) => {
   const { directorName } = req.params;
   const director = movies.find(movie => movie.Director.Name === directorName).Director;

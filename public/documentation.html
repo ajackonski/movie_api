@@ -4,9 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie-api-doc</title>
+    <style>
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        th, td {
+          padding: 8px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+        th {
+          background-color: #f2f2f2;
+        }
+      </style>
 </head>
 <body>
-    <h1>This is the header text</h1>
+    <h1>Welcome to Myflix!</h1>
     <p>This is Myflix! an API that will allow users to access information about different movies, genres, and directors. The user will be able to sign up, update their personal information, and create a list of their favorite movies. </p>
+<div class="documentation table">
+    <h2>API Endpoint Documentation</h2>
+
+    <table>
+    <tr>
+            <th>Endpoint URL</th>
+            <th>Method</th>
+            <th>Description</th>
+            <th>Format of Request Data</th>
+            <th>Format of Response Data</th>
+    </tr>
+    <tr>
+        <td>/movies</td>
+        <td>GET</td>
+        <td>Fetches all movies</td>
+        <td>None</td>
+        <td>A JSON object conatining data bout all movies</td>
+    </tr>
+    <tr>
+        <td>/movies/:title</td>
+        <td>GET</td>
+        <td>Fetch data on a single movie by title</td>
+        <td>None</td>
+        <td>A JSON object containing data bout the requested movie</td>
+      </tr>
+      <tr>
+        <td>/movies/genre/:genreName</td>
+        <td>GET</td>
+        <td>Fetch data about a genre by name</td>
+        <td>None</td>
+        <td>A JSON object containing data about the requested genre</td>
+      </tr>
+      <tr>
+        <td>/movies/director/:directorName</td>
+        <td>GET</td>
+        <td>Fetch data about a director by name</td>
+        <td>None</td>
+        <td>A JSON object containing data about the requested director</td>
+      </tr>
+      <tr>
+        <td>/users</td>
+        <td>POST</td>
+        <td>Create a new user</td>
+        <td>A JSON object holding data from the user to be added ex:
+            <code>
+                {
+                    "name": "Alex",
+                    "email": "Alex@email.com"
+                }
+            </code></td>
+        <td>A JSON object holding data from the user that has been added plus uuid ex:
+            <code>
+                {
+                    "fullname": "Alex",
+                    "email": "Alex@email.com",
+                    "id": "200f45b2-d144-49a6-9252-863c0fec99a9"
+                }
+            </code></td>
+      </tr>
+      <tr>
+        <td>/users/:id</td>
+        <td>PUT</td>
+        <td>Update a user entry by ID</td>
+        <td>A JSON object containing data from the user that is to be updated:
+            <code>
+                {
+                    "name": "New Alex",
+                    "email": "NewAlex@email.com"
+                }
+            </code>
+        </td>
+        <td>Text confirming the user entry has been updated</td>
+      </tr>
+      <tr>
+        <td>/users/:id/:movieTitle</td>
+        <td>POST</td>
+        <td>Adds a new movie to a user's favorite movie list</td>
+        <td>A JSON object  containing  data to be updated to the users favorite movie list:
+            <code>
+                {
+                    "Title": "Starship Troopers",
+                    "Director": "Paul Verhoeven",
+                    "Genre": {
+                        "Name": "Sci-fi"
+                    }
+                }
+            </code>
+        </td>
+        <td>Text confirming the movie has been added to the requested users favorites list</td>
+      </tr>
+      <tr>
+        <td>/users/:id/:movieTitle</td>
+        <td>DELETE</td>
+        <td>Remove a movie from a user's favorite movie list</td>
+        <td>None</td>
+        <td>Text confirming the change to the users favorites list</td>
+       </tr>
+       <tr>
+        <td>/users/:id</td>
+        <td>DELETE</td>
+        <td>Unregister a user</td>
+        <td>N/A</td>
+        <td>Text confirming the user has been unregistered</td>
+      </tr> 
+    </table>
+</div>
+
 </body>
 </html>
