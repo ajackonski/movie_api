@@ -1,133 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie-api-doc</title>
-    <style>
-        table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-        th, td {
-          padding: 8px;
-          text-align: left;
-          border-bottom: 1px solid #ddd;
-        }
-        th {
-          background-color: #f2f2f2;
-        }
-      </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie-api-doc</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Welcome to Myflix!</h1>
-    <p>This is Myflix! an API that will allow users to access information about different movies, genres, and directors. The user will be able to sign up, update their personal information, and create a list of their favorite movies. </p>
-<div class="documentation table">
+  <h1>Welcome to Myflix!</h1>
+  <p>This is Myflix! an API that will allow users to access information about different movies, genres, and directors.
+    The user will be able to sign up, update their personal information, and create a list of their favorite movies.
+  </p>
+  <div class="documentation table">
     <h2>API Endpoint Documentation</h2>
 
     <table>
-    <tr>
-            <th>Endpoint URL</th>
-            <th>Method</th>
-            <th>Description</th>
-            <th>Format of Request Data</th>
-            <th>Format of Response Data</th>
-    </tr>
-    <tr>
+      <tr>
+        <th>Endpoint URL</th>
+        <th>Method</th>
+        <th>Description</th>
+        <th>Request Data</th>
+        <th>Response Data</th>
+      </tr>
+      <tr>
         <td>/movies</td>
         <td>GET</td>
-        <td>Fetches all movies</td>
-        <td>None</td>
-        <td>A JSON object conatining data bout all movies</td>
-    </tr>
-    <tr>
-        <td>/movies/:title</td>
-        <td>GET</td>
-        <td>Fetch data on a single movie by title</td>
-        <td>None</td>
-        <td>A JSON object containing data bout the requested movie</td>
+        <td>Get all movies</td>
+        <td>N/A</td>
+        <td>
+          <pre>[
+{
+"_id": "60b8c18e8e620b24d8e7221b",
+"Title": "Inception",
+"Description": "A thief who steals corporate secrets through the use of dream-sharing technology.",
+"Genre": { "Name": "Sci-Fi", "Description": "Science Fiction" },
+"Director": { "Name": "Christopher Nolan", "Bio": "Director Bio" },
+"Actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt"],
+"ImagePath": "/images/inception.jpg",
+"Featured": true
+}
+]</pre>
+        </td>
       </tr>
       <tr>
-        <td>/movies/genre/:genreName</td>
+        <td>/movies/:Title</td>
         <td>GET</td>
-        <td>Fetch data about a genre by name</td>
-        <td>None</td>
-        <td>A JSON object containing data about the requested genre</td>
+        <td>Get movie by title</td>
+        <td>N/A</td>
+        <td>
+          <pre>{
+"_id": "60b8c18e8e620b24d8e7221b",
+"Title": "Inception",
+"Description": "A thief who steals corporate secrets through the use of dream-sharing technology.",
+"Genre": { "Name": "Sci-Fi", "Description": "Science Fiction" },
+"Director": { "Name": "Christopher Nolan", "Bio": "Director Bio" },
+"Actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt"],
+"ImagePath": "/images/inception.jpg",
+"Featured": true
+}</pre>
+        </td>
       </tr>
       <tr>
-        <td>/movies/director/:directorName</td>
+        <td>/movies/genre/:name</td>
         <td>GET</td>
-        <td>Fetch data about a director by name</td>
-        <td>None</td>
-        <td>A JSON object containing data about the requested director</td>
+        <td>Get movies by genre</td>
+        <td>N/A</td>
+        <td>
+          <pre>{
+"Name": "Sci-Fi",
+"Description": "Science Fiction",
+"Movies": [
+{
+"Title": "Inception",
+"Description": "A thief who steals corporate secrets through the use of dream-sharing technology.",
+"Director": { "Name": "Christopher Nolan", "Bio": "Director Bio" },
+"Actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt"],
+"ImagePath": "/images/inception.jpg",
+"Featured": true
+}
+]
+}</pre>
+        </td>
+      </tr>
+
+      <tr>
+        <td>/movies/director/:name</td>
+        <td>GET</td>
+        <td>Get movies by director</td>
+        <td>N/A</td>
+        <td>
+          <pre>{
+"Name": "Christopher Nolan",
+"Bio": "Director Bio",
+"Movies": [
+{
+"Title": "Inception",
+"Description": "A thief who steals corporate secrets through the use of dream-sharing technology.",
+"Genre": { "Name": "Sci-Fi", "Description": "Science Fiction" },
+"Actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt"],
+"ImagePath": "/images/inception.jpg",
+"Featured": true
+}
+]
+}</pre>
+        </td>
       </tr>
       <tr>
         <td>/users</td>
-        <td>POST</td>
-        <td>Create a new user</td>
-        <td>A JSON object holding data from the user to be added ex:
-            <code>
-                {
-                    "name": "Alex",
-                    "email": "Alex@email.com"
-                }
-            </code></td>
-        <td>A JSON object holding data from the user that has been added plus uuid ex:
-            <code>
-                {
-                    "fullname": "Alex",
-                    "email": "Alex@email.com",
-                    "id": "200f45b2-d144-49a6-9252-863c0fec99a9"
-                }
-            </code></td>
-      </tr>
-      <tr>
-        <td>/users/:id</td>
-        <td>PUT</td>
-        <td>Update a user entry by ID</td>
-        <td>A JSON object containing data from the user that is to be updated:
-            <code>
-                {
-                    "name": "New Alex",
-                    "email": "NewAlex@email.com"
-                }
-            </code>
-        </td>
-        <td>Text confirming the user entry has been updated</td>
-      </tr>
-      <tr>
-        <td>/users/:id/:movieTitle</td>
-        <td>POST</td>
-        <td>Adds a new movie to a user's favorite movie list</td>
-        <td>A JSON object  containing  data to be updated to the users favorite movie list:
-            <code>
-                {
-                    "Title": "Starship Troopers",
-                    "Director": "Paul Verhoeven",
-                    "Genre": {
-                        "Name": "Sci-fi"
-                    }
-                }
-            </code>
-        </td>
-        <td>Text confirming the movie has been added to the requested users favorites list</td>
-      </tr>
-      <tr>
-        <td>/users/:id/:movieTitle</td>
-        <td>DELETE</td>
-        <td>Remove a movie from a user's favorite movie list</td>
-        <td>None</td>
-        <td>Text confirming the change to the users favorites list</td>
-       </tr>
-       <tr>
-        <td>/users/:id</td>
-        <td>DELETE</td>
-        <td>Unregister a user</td>
+        <td>GET</td>
+        <td>Get all users</td>
         <td>N/A</td>
-        <td>Text confirming the user has been unregistered</td>
-      </tr> 
+        <td>
+          <pre>[
+{
+"_id": "60b8c18e8e620b24d8e7221b",
+"Username": "johndoe",
+"Email": "johndoe@example.com",
+"Birthday": "1980-01-01T00:00:00.000Z",
+"FavoriteMovies": []
+}
+]</pre>
+        </td>
+      </tr>
+
+      <tr>
+        <td>/users/:Username</td>
+        <td>GET</td>
+        <td>Get user by username</td>
+        <td>N/A</td>
+        <td>
+          <pre>{
+"_id": "60b8c18e8e620b24d8e7221b",
+"Username": "johndoe",
+"Email": "johndoe@example.com",
+"Birthday": "1980-01-01T00:00:00.000Z",
+"FavoriteMovies": []
+}</pre>
+        </td>
+      </tr>
+      <tr>
+        <td>/users/:Username</td>
+        <td>PUT</td>
+        <td>Update user by username</td>
+        <td>
+          <pre>{
+"Username": "janedoe",
+"Password": "newpassword123",
+"Email": "janedoe_new@example.com",
+"Birthday": "1990-01-01"
+}</pre>
+        </td>
+        <td>
+          <pre>{
+"_id": "60b8c18e8e620b24d8e7221b",
+"Username": "janedoe",
+"Password": "newpassword123",
+"Email": "janedoe_new@example.com",
+"Birthday": "1990-01-01T00:00:00.000Z",
+"FavoriteMovies": []
+}</pre>
+        </td>
+      </tr>
+      <tr>
+        <td>/users/:Username/movies/:movieId</td>
+        <td>POST</td>
+        <td>Add movie to user favorites</td>
+        <td>N/A</td>
+        <td>
+          <pre>{
+"_id": "60b8c18e8e620b24d8e7221b",
+"Username": "janedoe",
+"Email": "janedoe_new@example.com",
+"Birthday": "1990-01-01T00:00:00.000Z",
+"FavoriteMovies": ["60b8c18e8e620b24d8e7221b"]
+}</pre>
+        </td>
+      </tr>
+      <tr>
+        <td>/users/:Username/movies/:movieId</td>
+        <td>DELETE</td>
+        <td>Remove movie from user favorites</td>
+        <td>N/A</td>
+        <td>
+          <pre>{
+"_id": "60b8c18e8e620b24d8e7221b",
+"Username": "janedoe",
+"Email": "janedoe_new@example.com",
+"Birthday": "1990-01-01T00:00:00.000Z",
+"FavoriteMovies": []
+}</pre>
+        </td>
+      </tr>
+      <tr>
+        <td>/users/:username</td>
+        <td>DELETE</td>
+        <td>Delete user by username</td>
+        <td>N/A</td>
+        <td>jane_doe was deleted.</td>
+      </tr>
     </table>
-</div>
+  </div>
 
 </body>
+
 </html>
