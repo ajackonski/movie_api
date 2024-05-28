@@ -36,6 +36,7 @@
       <tr>
         <th>Endpoint URL</th>
         <th>Method</th>
+        <th>Logic</th>
         <th>Description</th>
         <th>Request Data</th>
         <th>Response Data</th>
@@ -43,6 +44,20 @@
       <tr>
         <td>/movies</td>
         <td>GET</td>
+        <td>
+          <code>
+            app.get('/movies', async (req, res) =&gt; {
+              await Movies.find()
+                .then((movies) =&gt; {
+                  res.status(201).json(movies);
+                })
+                .catch((err) =&gt; {
+                  console.error(err);
+                  res.status(500).send('Error: ' + err);
+                });
+            });
+          </code>
+        </td>
         <td>Get all movies</td>
         <td>N/A</td>
         <td>
@@ -63,6 +78,20 @@
       <tr>
         <td>/movies/:Title</td>
         <td>GET</td>
+        <td>
+          <code>
+            app.get('/movies/:Title', async (req, res) =&gt; { console.log(req);
+              await Movies.findOne({ Title: req.params.Title })
+                .then((movie) =&gt; {
+                  res.status(201).json(movie);
+                })
+                .catch((err) =&gt; {
+                  console.error(err);
+                  res.status(500).send('Error: ' + err);
+                });
+            });
+          </code>
+        </td>
         <td>Get movie by title</td>
         <td>N/A</td>
         <td>
@@ -81,6 +110,38 @@
       <tr>
         <td>/movies/genre/:name</td>
         <td>GET</td>
+        <td>
+          <code>
+            app.get('/movies/genre/:name', async (req, res) =&gt; {
+              try {
+                const genreName = req.params.name;
+                const movies = await Movies.find({ 'Genre.Name': genreName });
+            
+                if (movies.length === 0) {
+                  return res.status(404).send('Genre not found');
+                }
+            
+                const genreData = {
+                  Name: genreName,
+                  Description: movies[0].Genre.Description,
+                  Movies: movies.map(movie =&gt; ({
+                    Title: movie.Title,
+                    Description: movie.Description,
+                    Director: movie.Director,
+                    Actors: movie.Actors,
+                    ImagePath: movie.ImagePath,
+                    Featured: movie.Featured
+                  }))
+                };
+            
+                res.json(genreData);
+              } catch (err) {
+                console.error(err);
+                res.status(500).send('Server error');
+              }
+            });
+          </code>
+        </td>
         <td>Get movies by genre</td>
         <td>N/A</td>
         <td>
@@ -104,6 +165,38 @@
       <tr>
         <td>/movies/director/:name</td>
         <td>GET</td>
+        <td>
+          <code>
+            app.get('/movies/director/:name', async (req, res) =&gt; {
+  try {
+    const directorName = req.params.name;
+    const movies = await Movies.find({ 'Director.Name': directorName });
+
+    if (movies.length === 0) {
+      return res.status(404).send('Director not found');
+    }
+
+    const directorData = {
+      Name: directorName,
+      Bio: movies[0].Director.Bio,
+      Movies: movies.map(movie =&gt; ({
+        Title: movie.Title,
+        Description: movie.Description,
+        Genre: movie.Genre,
+        Actors: movie.Actors,
+        ImagePath: movie.ImagePath,
+        Featured: movie.Featured
+      }))
+    };
+
+    res.json(directorData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+          </code>
+        </td>
         <td>Get movies by director</td>
         <td>N/A</td>
         <td>
@@ -126,6 +219,20 @@
       <tr>
         <td>/users</td>
         <td>GET</td>
+        <td>
+          <code>
+            app.get('/users', async (req, res) =&gt; {
+              await Users.find()
+                .then((users) =&gt; {
+                  res.status(201).json(users);
+                })
+                .catch((err) =&gt; {
+                  console.error(err);
+                  res.status(500).send('Error: ' + err);
+                });
+            });
+          </code>
+        </td>
         <td>Get all users</td>
         <td>N/A</td>
         <td>
@@ -144,6 +251,20 @@
       <tr>
         <td>/users/:Username</td>
         <td>GET</td>
+        <td>
+          <code>
+            app.get('/users/:Username', async (req, res) =&gt; {
+              await Users.findOne({ Username: req.params.Username })
+                .then((user) =&gt; {
+                  res.json(user);
+                })
+                .catch((err) =&gt; {
+                  console.error(err);
+                  res.status(500).send('Error: ' + err);
+                });
+            });
+          </code>
+        </td>
         <td>Get user by username</td>
         <td>N/A</td>
         <td>
@@ -159,6 +280,36 @@
       <tr>
         <td>/users/:Username</td>
         <td>PUT</td>
+        <td>
+          <code>
+            app.put('/users/:Username', async (req, res) =&gt; {
+              try {
+                const user = await Users.findOne({ Username: req.params.Username });
+                if (!user) {
+                  return res.status(404).send('User not found');
+                }
+            
+                const updatedUser = await Users.findOneAndUpdate(
+                  { Username: req.params.Username },
+                  {
+                    $set: {
+                      Username: req.body.Username,
+                      Password: req.body.Password,
+                      Email: req.body.Email,
+                      Birthday: req.body.Birthday
+                    }
+                  },
+                  { new: true }
+                );
+            
+                res.status(201).json(updatedUser);
+              } catch (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+              }
+            });
+          </code>
+        </td>
         <td>Update user by username</td>
         <td>
           <pre>{
@@ -182,6 +333,41 @@
       <tr>
         <td>/users/:Username/movies/:movieId</td>
         <td>POST</td>
+        <td>
+          <code>
+            app.post('/users/:Username/movies/:movieId', async (req, res) =&gt; {
+              try {
+                const { Username, movieId } = req.params;
+            
+            
+                const user = await Users.findOne({ Username: Username });
+                if (!user) {
+                  return res.status(404).send('User not found');
+                }
+            
+            
+                const movie = await Movies.findById(movieId);
+                if (!movie) {
+                  return res.status(404).send('Movie not found');
+                }
+            
+            
+                if (user.FavoriteMovies.includes(movieId)) {
+                  return res.status(400).send('Movie already in favorites');
+                }
+            
+            
+                user.FavoriteMovies.push(movieId);
+                await user.save();
+            
+                res.status(201).json(user);
+              } catch (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+              }
+            });
+          </code>
+        </td>
         <td>Add movie to user favorites</td>
         <td>N/A</td>
         <td>
@@ -197,6 +383,28 @@
       <tr>
         <td>/users/:Username/movies/:movieId</td>
         <td>DELETE</td>
+        <td>
+          <code>
+            app.delete('/users/:Username/movies/:movieId', async (req, res) =&gt; {
+              try {
+                const updatedUser = await Users.findOneAndUpdate(
+                  { Username: req.params.Username },
+                  { $pull: { FavoriteMovies: req.params.movieId } },
+                  { new: true }
+                );
+            
+                if (!updatedUser) {
+                  return res.status(404).send('User not found');
+                }
+            
+                res.status(200).json(updatedUser);
+              } catch (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+              }
+            });
+          </code>
+        </td>
         <td>Remove movie from user favorites</td>
         <td>N/A</td>
         <td>
@@ -212,6 +420,24 @@
       <tr>
         <td>/users/:username</td>
         <td>DELETE</td>
+        <td>
+          <code>
+            app.delete('/users/:username', async (req, res) =&gt; {
+              await Users.findOneAndDelete({ username: req.params.username })
+                .then((user) =&gt; {
+                  if (!user) {
+                    res.status(400).send(req.params.username + ' was not found');
+                  } else {
+                    res.status(200).send(req.params.username + ' was deleted.');
+                  }
+                })
+                .catch((err) =&gt; {
+                  console.error(err);
+                  res.status(500).send('Error: ' + err);
+                });
+            });
+          </code>
+        </td>
         <td>Delete user by username</td>
         <td>N/A</td>
         <td>jane_doe was deleted.</td>
