@@ -16,21 +16,36 @@ mongoose.connect('mongodb://localhost:27017/realmyflix', { useNewUrlParser: true
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+//CORS domains
+const cors = require('cors');
 
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com']
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1) {
+      let message = 'The CORS policy for this application does not allow acces from this origin ' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
+// passport implementation
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport')
 
 app.use(bodyParser.json());
 
-  // create a write stream (in append mode)
+// create a write stream (in append mode)
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
 
 // setup the logger
 app.use(morgan('combined', {stream: accessLogStream}));
 app.use(express.static('public'));
 
-// endpoints
+// API endpoints
 
 //homepage
 app.get('/', (req, res) => {
@@ -125,35 +140,9 @@ app.get('/movies/director/:name',passport.authenticate('jwt', { session: false }
   }
 });
 
-//create a new user(done)
-app.post('/users', async (req, res) => {
-  await Users.findOne({ Username: req.body.Username })
-    .then((user) => {
-      if (user) {
-        return res.status(400).send(req.body.Username + ' already exists');
-      } else { 
-        Users
-          .create({
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-          })
-          .then((user) =>{res.status(201).json(user) })
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send('Error: ' + error);
-        })
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error: ' + error);
-    });
-});
 
 // Get all users (done)
-app.get('/users',passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Users.find()
     .then((users) => {
       res.status(201).json(users);
@@ -319,7 +308,60 @@ app.delete('/users/:Username',passport.authenticate('jwt', { session: false }), 
     });
 });
 
+//create a new user (no bcrypt)
+/*app.post('/users',async (req, res) => {
+  await Users.findOne({ Username: req.body.Username})
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + ' already exists');
+      } else {
+        Users
+          .create({
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) => { res.status(201).json(user) })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});*/
 
+//hash user password before storing using bcrypt
+app.post('/users',async (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.Passsword);
+  await Users.findOne({ Username: req.body.Username})
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + ' already exists');
+      } else {
+        Users
+          .create({
+            Username: req.body.Username,
+            Password: hashedPassword,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) => { res.status(201).json(user) })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
