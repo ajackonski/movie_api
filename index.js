@@ -337,7 +337,9 @@ app.delete('/users/:Username',passport.authenticate('jwt', { session: false }), 
 
 //hash user password before storing using bcrypt
 app.post('/users',async (req, res) => {
-  let hashedPassword = Users.hashPassword(req.body.Passsword);
+  console.log(req);
+  let hashedPassword = Users.hashPassword(req.body.Password);
+  console.log(hashedPassword);
   await Users.findOne({ Username: req.body.Username})
     .then((user) => {
       if (user) {
