@@ -22,7 +22,10 @@ app.use(bodyParser.urlencoded({
 //CORS domains
 const cors = require('cors');
 
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com']
+const cors = require('cors');
+app.use(cors());
+
+/*let allowedOrigins = ['http://localhost:8080', 'http://testsite.com']
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -33,7 +36,8 @@ app.use(cors({
     }
     return callback(null, true);
   }
-}));
+}));*/
+
 // passport implementation
 let auth = require('./auth')(app);
 const passport = require('passport');
