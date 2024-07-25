@@ -22,7 +22,6 @@ app.use(bodyParser.urlencoded({
 //CORS domains
 const cors = require('cors');
 
-const cors = require('cors');
 app.use(cors());
 
 /*let allowedOrigins = ['http://localhost:8080', 'http://testsite.com']
