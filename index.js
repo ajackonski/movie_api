@@ -12,8 +12,10 @@ const { check, validationResult } = require('express-validator');
 const Movies = Models.Movie;
 const Users = Models.User;
 
+const CONNECTION_URI = 'mongodb+srv://ajackonski1:HWPFYAonUAGjIaFf@myflixdb.9jqb0vq.mongodb.net/?retryWrites=true&w=majority&appName=myFlixDb'
+
 //mongoose.connect('mongodb://localhost:27017/realmyflix', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect( process.env.CONNECTION_URI , { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect( CONNECTION_URI , { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 app.use(bodyParser.urlencoded({
@@ -61,7 +63,7 @@ app.get('/', (req, res) => {
 
  //documentation endpoint
 app.get('/documentation',passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.sendFile('/public/documentation.html');
+  res.sendFile('./public/documentation.html');
 });
 
 //return JSON list of movies in the "movies" collection to the user (done) 
