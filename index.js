@@ -75,6 +75,7 @@ app.get('/movies/:Title',passport.authenticate('jwt', { session: false }), async
       res.status(500).send('Error: ' + err);
     });
 });
+
 //return data about a movies genre 
 app.get('/movies/genre/:name',passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
