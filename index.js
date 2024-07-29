@@ -9,10 +9,9 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const { check, validationResult } = require('express-validator');
 
-const Movies = Models.Movie;
-const Users = Models.User;
+const Movies = Models.movie;
+const Users = Models.user;
 
-//const CONNECTION_URI = 'mongodb+srv://ajackonski1:HWPFYAonUAGjIaFf@myflixdb.9jqb0vq.mongodb.net/?retryWrites=true&w=majority&appName=myFlixDb'
 
 //mongoose.connect('mongodb://localhost:27017/realmyflix', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect( process.env.CONNECTION_URI , { useNewUrlParser: true, useUnifiedTopology: true });
@@ -26,18 +25,6 @@ const cors = require('cors');
 
 app.use(cors());
 
-/*let allowedOrigins = ['http://localhost:8080', 'http://testsite.com']
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1) {
-      let message = 'The CORS policy for this application does not allow acces from this origin ' + origin;
-      return callback(new Error(message ), false);
-    }
-    return callback(null, true);
-  }
-}));*/
 
 // passport implementation
 let auth = require('./auth')(app);
@@ -317,34 +304,8 @@ app.delete('/users/:Username',passport.authenticate('jwt', { session: false }), 
     });
 });
 
-//create a new user (no bcrypt)
-/*app.post('/users',async (req, res) => {
-  await Users.findOne({ Username: req.body.Username})
-    .then((user) => {
-      if (user) {
-        return res.status(400).send(req.body.Username + ' already exists');
-      } else {
-        Users
-          .create({
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-          })
-          .then((user) => { res.status(201).json(user) })
-          .catch((error) => {
-            console.error(error);
-            res.status(500).send('Error: ' + error);
-          });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error: ' + error);
-    });
-});*/
 
-//hash user password before storing using bcrypt
+//Create new user and hash the new user password before storing using bcrypt
 app.post('/users', [
   check('Username', 'Username is required').isLength({min: 5}),
   check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
