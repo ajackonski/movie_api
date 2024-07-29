@@ -53,7 +53,7 @@ app.get('/documentation',passport.authenticate('jwt', { session: false }), (req,
   res.sendFile('./public/documentation.html');
 });
 
-//return JSON list of movies in the "movies" collection to the user (done) 
+//return JSON list of movies in the "movies" collection to the user 
   app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
     await Movies.find()
       .then((movies) => {
@@ -65,7 +65,7 @@ app.get('/documentation',passport.authenticate('jwt', { session: false }), (req,
       });
   });
 
-//get data on a particular movie by title (done)
+//get data on a particular movie by title 
 app.get('/movies/:Title',passport.authenticate('jwt', { session: false }), async (req, res) => { console.log(req);
   await Movies.findOne({ Title: req.params.Title })
     .then((movie) => {
@@ -76,7 +76,7 @@ app.get('/movies/:Title',passport.authenticate('jwt', { session: false }), async
       res.status(500).send('Error: ' + err);
     });
 });
-//return data about a movies genre (Done)
+//return data about a movies genre 
 app.get('/movies/genre/:name',passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const genreName = req.params.name;
@@ -106,7 +106,7 @@ app.get('/movies/genre/:name',passport.authenticate('jwt', { session: false }), 
   }
 });
 
-//get data on a director (done)
+//get data on a director 
 app.get('/movies/director/:name',passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const directorName = req.params.name;
@@ -137,7 +137,7 @@ app.get('/movies/director/:name',passport.authenticate('jwt', { session: false }
 });
 
 
-// Get all users (done)
+// Get all users 
 app.get('/users', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Users.find()
     .then((users) => {
@@ -149,7 +149,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }), async (req, 
     });
 });
 
-// Get a user by username (done)
+// Get a user by username 
 app.get('/users/:Username',passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Users.findOne({ Username: req.params.Username })
     .then((user) => {
@@ -161,7 +161,7 @@ app.get('/users/:Username',passport.authenticate('jwt', { session: false }), asy
     });
 });
 
-//update a user (done)
+//update a user 
 app.put('/users/:Username',passport.authenticate('jwt', { session: false }), async (req, res) => {
   if(req.user.Username !== req.params.Username){
     return res.status(400).send('Permission denied');
@@ -262,7 +262,7 @@ app.post('/users/:Username/movies/:movieId',passport.authenticate('jwt', { sessi
 
 
 
-//remove a movie from a users favorite movie list (got it)
+//remove a movie from a users favorite movie list 
 app.delete('/users/:Username/movies/:movieId',passport.authenticate('jwt', { session: false }), async (req, res) => {
   if(req.user.Username !== req.params.Username){
     return res.status(400).send('Permission denied');
@@ -285,7 +285,7 @@ app.delete('/users/:Username/movies/:movieId',passport.authenticate('jwt', { ses
   }
 });
 
-// Delete a user by username (done)
+// Delete a user by username 
 app.delete('/users/:Username',passport.authenticate('jwt', { session: false }), async (req, res) => {
   if(req.user.Username !== req.params.Username){
     return res.status(400).send('Permission denied');
