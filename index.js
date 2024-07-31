@@ -12,7 +12,6 @@ const Movies = Models.movie;
 const Users = Models.user;
 
 
-//mongoose.connect('mongodb://localhost:27017/realmyflix', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect( process.env.CONNECTION_URI , { useNewUrlParser: true, useUnifiedTopology: true });
 
 
