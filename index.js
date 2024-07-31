@@ -8,8 +8,8 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const { check, validationResult } = require('express-validator');
 
-const Movies = Models.movie;
-const Users = Models.user;
+const Movies = Models.Movie;
+const Users = Models.User;
 
 
 mongoose.connect( process.env.CONNECTION_URI , { useNewUrlParser: true, useUnifiedTopology: true });

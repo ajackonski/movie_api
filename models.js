@@ -1,41 +1,44 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-let movieSchema = mongoose.Schema({
-    Title: {type: String, required: true},
-    Description: {type: String, required: true},
-    Genre: {
-        Name: String,
-        Description: String
+// Define the Movie Schema
+const movieSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    genre: {
+        name: String,
+        description: String
     },
-    Director: {
-        Name: String,
-        Bio: String
+    director: {
+        name: String,
+        bio: String
     },
-    Actors: [String],
-    ImagePath: String,
-    Featured: Boolean
+    actors: [String],
+    imagePath: String,
+    featured: { type: Boolean, default: false }
 });
 
-let userSchema = mongoose.Schema({
-    Username: {type: String, required: true},
-    Password: {type: String, required: true},
-    Email: {type: String, required: true},
-    Birthday: Date,
-    FavoriteMovies: [{type: mongoose.Schema.Types.ObjectId, ref: 'Movie'}]
+// Define the User Schema
+const userSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ },
+    birthday: { type: Date },
+    favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 });
 
+// Static method to hash passwords
 userSchema.statics.hashPassword = (password) => {
-    console.log(password);
     return bcrypt.hashSync(password, 10);
 };
 
+// Instance method to validate passwords
 userSchema.methods.validatePassword = function(password) {
-    return bcrypt.compareSync(password, this.Password);
+    return bcrypt.compareSync(password, this.password);
 };
 
-let Movie = mongoose.model('movie', movieSchema);
-let User = mongoose.model('user', userSchema);
+// Create the models
+const Movie = mongoose.model('Movie', movieSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports.Movie = movie;
-module.exports.User = user;
+module.exports = { Movie, User };
