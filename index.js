@@ -65,7 +65,7 @@ app.get('/documentation',passport.authenticate('jwt', { session: false }), (req,
 
 //get data on a particular movie by title 
 app.get('/movies/:Title',passport.authenticate('jwt', { session: false }), async (req, res) => { console.log(req);
-  await Movies.findOne({ Title: req.params.Title })
+  await Movies.findOne({ title: req.params.Title })
     .then((movie) => {
       res.status(201).json(movie);
     })
