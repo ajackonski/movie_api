@@ -169,7 +169,7 @@ app.put('/users/:Username',passport.authenticate('jwt', { session: false }), asy
     return res.status(400).send('Permission denied');
 }
   try {
-    const user = await Users.findOne({ Username: req.params.Username });
+    const user = await Users.findOne({ username: req.params.Username });
     if (!user) {
       return res.status(404).send('User not found');
     }
