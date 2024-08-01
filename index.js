@@ -87,7 +87,7 @@ app.get('/movies/genre/:name',passport.authenticate('jwt', { session: false }), 
 
     const genreData = {
       Name: genreName,
-      Description: movies[0].Genre.Description,
+      Description: movies[0].genre.description,
       Movies: movies.map(movie => ({
         Title: movie.title,
         Description: movie.description,
@@ -109,7 +109,7 @@ app.get('/movies/genre/:name',passport.authenticate('jwt', { session: false }), 
 app.get('/movies/director/:name',passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const directorName = req.params.name;
-    const movies = await Movies.find({ 'Director.Name': directorName });
+    const movies = await Movies.find({ 'director.name': directorName });
 
     if (movies.length === 0) {
       return res.status(404).send('Director not found');
@@ -117,14 +117,14 @@ app.get('/movies/director/:name',passport.authenticate('jwt', { session: false }
 
     const directorData = {
       Name: directorName,
-      Bio: movies[0].Director.Bio,
+      Bio: movies[0].director.bio,
       Movies: movies.map(movie => ({
-        Title: movie.Title,
-        Description: movie.Description,
-        Genre: movie.Genre,
-        Actors: movie.Actors,
-        ImagePath: movie.ImagePath,
-        Featured: movie.Featured
+        Title: movie.title,
+        Description: movie.description,
+        Genre: movie.genre,
+        Actors: movie.actors,
+        ImagePath: movie.imagePath,
+        Featured: movie.featured
       }))
     };
 
@@ -150,7 +150,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }), async (req, 
 
 // Get a user by username 
 app.get('/users/:Username',passport.authenticate('jwt', { session: false }), async (req, res) => {
-  await Users.findOne({ Username: req.params.Username })
+  await Users.findOne({ username: req.params.Username })
     .then((user) => {
       res.json(user);
     })
@@ -175,13 +175,13 @@ app.put('/users/:Username',passport.authenticate('jwt', { session: false }), asy
     }
 
     const updatedUser = await Users.findOneAndUpdate(
-      { Username: req.params.Username },
+      { username: req.params.Username },
       {
         $set: {
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday
+          username: req.body.Username,
+          password: req.body.Password,
+          email: req.body.Email,
+          birthday: req.body.Birthday
         }
       },
       { new: true }
@@ -232,7 +232,7 @@ app.post('/users/:Username/movies/:movieId',passport.authenticate('jwt', { sessi
     const { Username, movieId } = req.params;
 
 
-    const user = await Users.findOne({ Username: Username });
+    const user = await Users.findOne({ username: Username });
     if (!user) {
       return res.status(404).send('User not found');
     }
@@ -249,7 +249,7 @@ app.post('/users/:Username/movies/:movieId',passport.authenticate('jwt', { sessi
     }
 
 
-    user.FavoriteMovies.push(movieId);
+    user.favoriteMovies.push(movieId);
     await user.save();
 
     res.status(201).json(user);
@@ -268,8 +268,8 @@ app.delete('/users/:Username/movies/:movieId',passport.authenticate('jwt', { ses
 }
   try {
     const updatedUser = await Users.findOneAndUpdate(
-      { Username: req.params.Username },
-      { $pull: { FavoriteMovies: req.params.movieId } },
+      { username: req.params.Username },
+      { $pull: { favoriteMovies: req.params.movieId } },
       { new: true }
     );
 
@@ -289,7 +289,7 @@ app.delete('/users/:Username',passport.authenticate('jwt', { session: false }), 
   if(req.user.Username !== req.params.Username){
     return res.status(400).send('Permission denied');
 }
-  await Users.findOneAndDelete({ Username: req.params.Username })
+  await Users.findOneAndDelete({ username: req.params.Username })
     .then((user) => {
       if (!user) {
         res.status(400).send(req.params.Username + ' was not found');
@@ -319,7 +319,7 @@ if (!errors.isEmpty()) {
 
   let hashedPassword = Users.hashPassword(req.body.Password);
   console.log(hashedPassword);
-  await Users.findOne({ Username: req.body.Username})
+  await Users.findOne({ username: req.body.Username})
     .then((user) => {
       if (user) {
         return res.status(400).send(req.body.Username + ' already exists');
