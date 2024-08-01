@@ -43,9 +43,9 @@ let Users = Models.User,
         usernameField: 'Username',
         passwordField: 'Password',
       },
-      async (username, password, callback) => {
-        console.log(`${username} ${password}`);
-        await Users.findOne({ Username: username })
+      async (Username, password, callback) => {
+        console.log(`${Username} ${password}`);
+        await Users.findOne({ username: Username })
         .then((user) => {
           if (!user) {
             console.log('incorrect username');

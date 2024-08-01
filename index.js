@@ -12,7 +12,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 
-mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect( process.env.CONNECTION_URI,{ useNewUrlParser: true, useUnifiedTopology: true, "dbName":  "<DATABASE>" });
 
 
 app.use(bodyParser.urlencoded({
@@ -54,7 +54,7 @@ app.get('/documentation',passport.authenticate('jwt', { session: false }), (req,
 //return JSON list of movies in the "movies" collection to the user 
   app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
     await Movies.find()
-      .then((movies) => {
+      .then((movies) => { console.log(movies)
         res.status(201).json(movies);
       })
       .catch((err) => {
@@ -326,10 +326,10 @@ if (!errors.isEmpty()) {
       } else {
         Users
           .create({
-            Username: req.body.Username,
-            Password: hashedPassword,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
+            username: req.body.Username,
+            password: hashedPassword,
+            email: req.body.Email,
+            birthday: req.body.Birthday
           })
           .then((user) => { res.status(201).json(user) })
           .catch((error) => {
