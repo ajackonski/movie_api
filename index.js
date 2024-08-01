@@ -161,7 +161,7 @@ app.get('/users/:Username',passport.authenticate('jwt', { session: false }), asy
 });
 
 //update a user 
-app.put('/users/:Username',passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.put('/users/:username',passport.authenticate('jwt', { session: false }), async (req, res) => {
   if(req.user.Username !== req.params.Username){
     return res.status(400).send('Permission denied');
 }
