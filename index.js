@@ -149,7 +149,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }), async (req, 
 });
 
 // Get a user by username 
-app.get('/users/:Username',passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.get('/users/:username',passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Users.findOne({ username: req.params.Username })
     .then((user) => {
       res.json(user);
@@ -224,7 +224,7 @@ app.post('/movies',passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Add a movie to a user's list of favorites (got it!!)
-app.post('/users/:Username/movies/:movieId',passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.post('/users/:username/movies/:movieId',passport.authenticate('jwt', { session: false }), async (req, res) => {
   if(req.user.Username !== req.params.Username){
     return res.status(400).send('Permission denied');
 }
