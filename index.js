@@ -79,7 +79,7 @@ app.get('/movies/:Title',passport.authenticate('jwt', { session: false }), async
 app.get('/movies/genre/:name',passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const genreName = req.params.name;
-    const movies = await Movies.find({ 'Genre.Name': genreName });
+    const movies = await Movies.find({ 'genre.name': genreName });
 
     if (movies.length === 0) {
       return res.status(404).send('Genre not found');
@@ -89,12 +89,12 @@ app.get('/movies/genre/:name',passport.authenticate('jwt', { session: false }), 
       Name: genreName,
       Description: movies[0].Genre.Description,
       Movies: movies.map(movie => ({
-        Title: movie.Title,
-        Description: movie.Description,
-        Director: movie.Director,
-        Actors: movie.Actors,
-        ImagePath: movie.ImagePath,
-        Featured: movie.Featured
+        Title: movie.title,
+        Description: movie.description,
+        Director: movie.director,
+        Actors: movie.actors,
+        ImagePath: movie.imagePath,
+        Featured: movie.featured
       }))
     };
 
