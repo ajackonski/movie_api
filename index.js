@@ -244,7 +244,7 @@ app.post('/users/:username/movies/:movieId',passport.authenticate('jwt', { sessi
     }
 
 
-    if (user.FavoriteMovies.includes(movieId)) {
+    if (user.favoriteMovies.includes(movieId)) {
       return res.status(400).send('Movie already in favorites');
     }
 
