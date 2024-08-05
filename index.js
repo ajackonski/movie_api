@@ -150,7 +150,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }), async (req, 
 
 // Get a user by username 
 app.get('/users/:username',passport.authenticate('jwt', { session: false }), async (req, res) => {
-  await Users.findOne({ username: req.params.Username })
+  await Users.findOne({ username: req.params.username })
     .then((user) => {
       res.json(user);
     })
@@ -162,23 +162,23 @@ app.get('/users/:username',passport.authenticate('jwt', { session: false }), asy
 
 //update a user 
 app.put('/users/:username',passport.authenticate('jwt', { session: false }), async (req, res) => {
-  if(req.user.Username !== req.params.Username){
+  if(req.user.username !== req.params.username){
     return res.status(400).send('Permission denied');
 }
-  if(req.user.Username !== req.params.Username){
+  if(req.user.username !== req.params.username){
     return res.status(400).send('Permission denied');
 }
   try {
-    const user = await Users.findOne({ username: req.params.Username });
+    const user = await Users.findOne({ username: req.params.username });
     if (!user) {
       return res.status(404).send('User not found');
     }
 
     const updatedUser = await Users.findOneAndUpdate(
-      { username: req.params.Username },
+      { username: req.params.username },
       {
         $set: {
-          username: req.body.Username,
+          username: req.body.username,
           password: req.body.Password,
           email: req.body.Email,
           birthday: req.body.Birthday
@@ -225,14 +225,14 @@ app.post('/movies',passport.authenticate('jwt', { session: false }), async (req,
 
 // Add a movie to a user's list of favorites (got it!!)
 app.post('/users/:username/movies/:movieId',passport.authenticate('jwt', { session: false }), async (req, res) => {
-  if(req.user.Username !== req.params.Username){
+  if(req.user.username !== req.params.username){
     return res.status(400).send('Permission denied');
 }
   try {
-    const { Username, movieId } = req.params;
+    const { username, movieId } = req.params;
 
 
-    const user = await Users.findOne({ username: Username });
+    const user = await Users.findOne({ username: username });
     if (!user) {
       return res.status(404).send('User not found');
     }
@@ -263,12 +263,12 @@ app.post('/users/:username/movies/:movieId',passport.authenticate('jwt', { sessi
 
 //remove a movie from a users favorite movie list 
 app.delete('/users/:username/movies/:movieId',passport.authenticate('jwt', { session: false }), async (req, res) => {
-  if(req.user.Username !== req.params.Username){
+  if(req.user.username !== req.params.username){
     return res.status(400).send('Permission denied');
 }
   try {
     const updatedUser = await Users.findOneAndUpdate(
-      { username: req.params.Username },
+      { username: req.params.username },
       { $pull: { favoriteMovies: req.params.movieId } },
       { new: true }
     );
@@ -286,15 +286,15 @@ app.delete('/users/:username/movies/:movieId',passport.authenticate('jwt', { ses
 
 // Delete a user by username 
 app.delete('/users/:username',passport.authenticate('jwt', { session: false }), async (req, res) => {
-  if(req.user.Username !== req.params.Username){
+  if(req.user.username !== req.params.username){
     return res.status(400).send('Permission denied');
 }
-  await Users.findOneAndDelete({ username: req.params.Username })
+  await Users.findOneAndDelete({ username: req.params.username })
     .then((user) => {
       if (!user) {
-        res.status(400).send(req.params.Username + ' was not found');
+        res.status(400).send(req.params.username + ' was not found');
       } else {
-        res.status(200).send(req.params.Username + ' was deleted.');
+        res.status(200).send(req.params.username + ' was deleted.');
       }
     })
     .catch((err) => {
@@ -319,14 +319,14 @@ if (!errors.isEmpty()) {
 
   let hashedPassword = Users.hashPassword(req.body.Password);
   console.log(hashedPassword);
-  await Users.findOne({ username: req.body.Username})
+  await Users.findOne({ username: req.body.username})
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.Username + ' already exists');
+        return res.status(400).send(req.body.username + ' already exists');
       } else {
         Users
           .create({
-            username: req.body.Username,
+            username: req.body.username,
             password: hashedPassword,
             email: req.body.Email,
             birthday: req.body.Birthday
