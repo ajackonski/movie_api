@@ -47,12 +47,12 @@ app.get('/', (req, res) => {
 });
 
  //documentation endpoint
-app.get('/documentation',passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/documentation', (req, res) => {
   res.sendFile('./public/documentation.html');
 });
 
 //return JSON list of movies in the "movies" collection to the user 
-  app.get('/movies', async (req, res) => {
+  app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
     await Movies.find()
       .then((movies) => { console.log(movies)
         res.status(201).json(movies);
