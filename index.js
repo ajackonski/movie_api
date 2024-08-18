@@ -314,6 +314,9 @@ app.post('/users', [
   check('Password', 'Password is required').not().isEmpty(),
   check('Email', 'Email does not appear to be valid').isEmail()
 ], async (req, res) => {
+
+  console.log(req.body); // Log the incoming request body
+
   let errors = validationResult(req);
 
 if (!errors.isEmpty()) {
