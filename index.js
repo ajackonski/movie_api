@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express'),
   morgan = require('morgan'),
   fs = require('fs'),  
@@ -12,7 +13,9 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 
-mongoose.connect( process.env.CONNECTION_URI,{ useNewUrlParser: true, useUnifiedTopology: true, "dbName":  "<DATABASE>" });
+mongoose.connect( process.env.CONNECTION_URI,{ useNewUrlParser: true, useUnifiedTopology: true, "dbName":  "<DATABASE>" })
+.then(() => console.log('Connected to the database'))
+.catch((err) => console.error('Could not connect to the database', err));
 
 
 app.use(bodyParser.urlencoded({
