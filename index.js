@@ -21,6 +21,8 @@ mongoose.connect( process.env.CONNECTION_URI,{ useNewUrlParser: true, useUnified
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+
 //CORS domains
 const cors = require('cors');
 
