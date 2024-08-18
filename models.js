@@ -20,10 +20,10 @@ const movieSchema = new mongoose.Schema({
 
 // Define the User Schema
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
+    username: { type: String, required: true },
     password: { type: String, required: true },
-    email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ },
-    birthday: { type: Date },
+    email: { type: String, required: true },
+    birthday: Date,
     favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 });
 
