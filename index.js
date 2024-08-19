@@ -7,27 +7,23 @@ const express = require('express'),
 const app = express()
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-const { check, validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator'); // Updated import
 
 const Movies = Models.Movie;
 const Users = Models.User;
-
 
 mongoose.connect( process.env.CONNECTION_URI,{ useNewUrlParser: true, useUnifiedTopology: true, "dbName":  "<DATABASE>" })
 .then(() => console.log('Connected to the database'))
 .catch((err) => console.error('Could not connect to the database', err));
 
-
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-
-//CORS domains
+// CORS domains
 const cors = require('cors');
 
 app.use(cors());
-
 
 // passport implementation
 let auth = require('./auth')(app);
@@ -167,10 +163,10 @@ app.get('/users/:username',passport.authenticate('jwt', { session: false }), asy
 
 //update a user 
 app.post('/users', [
-  check('Username', 'Username is required').isLength({ min: 5 }).isAlphanumeric(),
-  check('Password', 'Password is required').not().isEmpty(),
-  check('Email', 'Email does not appear to be valid').isEmail(),
-  check('Birthday', 'Birthday must be in YYYY-MM-DD format').optional().isISO8601()
+  body('Username', 'Username is required').isLength({ min: 5 }).isAlphanumeric(),
+  body('Password', 'Password is required').not().isEmpty(),
+  body('Email', 'Email does not appear to be valid').isEmail(),
+  body('Birthday', 'Birthday must be in YYYY-MM-DD format').optional().isISO8601()
 ], (req, res) => {
   
   // Log the incoming request body
@@ -320,23 +316,22 @@ app.delete('/users/:username',passport.authenticate('jwt', { session: false }), 
 
 //Create new user and hash the new user password before storing using bcrypt
 app.post('/users', [
-  check('Username', 'Username is required').isLength({min: 5}),
-  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-  check('Password', 'Password is required').not().isEmpty(),
-  check('Email', 'Email does not appear to be valid').isEmail()
+  body('Username', 'Username is required').isLength({ min: 5 }),
+  body('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  body('Password', 'Password is required').not().isEmpty(),
+  body('Email', 'Email does not appear to be valid').isEmail()
 ], async (req, res) => {
-
   console.log(req.body); // Log the incoming request body
 
   let errors = validationResult(req);
 
-if (!errors.isEmpty()) {
-  return res.status(422).json({ errors: errors.array() });
-}
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
 
   let hashedPassword = Users.hashPassword(req.body.Password);
   console.log(hashedPassword);
-  await Users.findOne({ username: req.body.username})
+  await Users.findOne({ username: req.body.username })
     .then((user) => {
       if (user) {
         return res.status(400).send(req.body.username + ' already exists');
@@ -360,6 +355,7 @@ if (!errors.isEmpty()) {
       res.status(500).send('Error: ' + error);
     });
 });
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
