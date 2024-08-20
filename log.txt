@@ -283,3 +283,6 @@
 127.0.0.1 - - [01/Aug/2024:22:32:25 +0000] "POST /users HTTP/1.1" 201 223 "-" "PostmanRuntime/7.40.0"
 127.0.0.1 - - [01/Aug/2024:22:32:55 +0000] "GET /movies/ HTTP/1.1" 401 - "-" "PostmanRuntime/7.40.0"
 127.0.0.1 - - [01/Aug/2024:22:34:14 +0000] "GET /movies/ HTTP/1.1" 201 2728 "-" "PostmanRuntime/7.40.0"
+127.0.0.1 - - [18/Aug/2024:15:28:39 +0000] "POST /users HTTP/1.1" 500 136 "-" "PostmanRuntime/7.41.1"
+127.0.0.1 - - [18/Aug/2024:15:30:36 +0000] "POST /users HTTP/1.1" 500 136 "-" "PostmanRuntime/7.41.1"
+127.0.0.1 - - [18/Aug/2024:15:34:15 +0000] "POST /users HTTP/1.1" 422 350 "-" "PostmanRuntime/7.41.1"

@@ -314,12 +314,14 @@ app.delete('/users/:username',passport.authenticate('jwt', { session: false }), 
 });
 
 
-//Create new user and hash the new user password before storing using bcrypt
+//Signup
 app.post('/users', [
+  [
   body('Username', 'Username is required').isLength({ min: 5 }),
   body('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
   body('Password', 'Password is required').not().isEmpty(),
   body('Email', 'Email does not appear to be valid').isEmail()
+  ]
 ], async (req, res) => {
   console.log(req.body); // Log the incoming request body
 
