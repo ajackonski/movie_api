@@ -162,7 +162,7 @@ app.get('/users/:username',passport.authenticate('jwt', { session: false }), asy
 });
 
 //update a user 
-app.post('/users', [
+app.put('/users', [
   body('Username', 'Username is required').isLength({ min: 5 }).isAlphanumeric(),
   body('Password', 'Password is required').not().isEmpty(),
   body('Email', 'Email does not appear to be valid').isEmail(),
@@ -338,7 +338,7 @@ app.post('/users', [
         return res.status(400).send(req.body.username + ' already exists');
       } else {
         Users
-          .create({
+          .create({ //might not work
             Username: req.body.username,
             Password: hashedPassword,
             Email: req.body.Email,
