@@ -182,14 +182,14 @@ app.put('/users', [
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.Username + ' already exists');
+        return res.status(400).send(req.body.username + ' already exists');
       } else {
         Users
           .create({
-            Username: req.body.Username,
-            Password: hashedPassword,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
+            username: req.body.Username,
+            password: hashedPassword,
+            email: req.body.Email,
+            birthday: req.body.Birthday
           })
           .then((user) => { res.status(201).json(user) })
           .catch((error) => {
@@ -339,10 +339,10 @@ app.post('/users', [
       } else {
         Users
           .create({ //might not work
-            Username: req.body.username,
-            Password: hashedPassword,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
+            username: req.body.Username,
+            password: hashedPassword,
+            email: req.body.Email,
+            birthday: req.body.Birthday
           })
           .then((user) => { res.status(201).json(user) })
           .catch((error) => {
