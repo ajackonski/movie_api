@@ -150,16 +150,22 @@ app.get('/users', passport.authenticate('jwt', { session: false }), async (req, 
 });
 
 // Get a user by username 
-app.get('/users/:username',passport.authenticate('jwt', { session: false }), async (req, res) => {
-  await Users.findOne({ username: req.params.username })
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
+// Get user info, including favorite movies
+app.get('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const user = await Users.findOne({ username: req.params.username }).populate('favoriteMovies');
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  }
 });
+
 
 //update a user 
 app.put('/users', [
@@ -233,31 +239,35 @@ app.post('/movies',passport.authenticate('jwt', { session: false }), async (req,
   }
 });
 
-// Add a movie to a user's list of favorites (got it!!)
+//add movie to users favorites list
 app.post('/users/:username/movies/:movieId',passport.authenticate('jwt', { session: false }), async (req, res) => {
+  console.log('Authenticated user:', req.user.username);
+  console.log('Username in params:', req.params.username);
+
   if(req.user.username !== req.params.username){
     return res.status(400).send('Permission denied');
-}
+  }
+  
   try {
     const { username, movieId } = req.params;
-
-
     const user = await Users.findOne({ username: username });
+
     if (!user) {
       return res.status(404).send('User not found');
     }
 
-
+    console.log('User found:', user);
+    
     const movie = await Movies.findById(movieId);
     if (!movie) {
       return res.status(404).send('Movie not found');
     }
 
+    console.log('Movie found:', movie);
 
     if (user.favoriteMovies.includes(movieId)) {
       return res.status(400).send('Movie already in favorites');
     }
-
 
     user.favoriteMovies.push(movieId);
     await user.save();
@@ -268,6 +278,7 @@ app.post('/users/:username/movies/:movieId',passport.authenticate('jwt', { sessi
     res.status(500).send('Error: ' + err);
   }
 });
+
 
 
 
